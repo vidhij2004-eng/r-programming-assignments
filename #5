@@ -1,0 +1,25 @@
+# Create matrices
+A <- matrix(1:100,  nrow = 10)
+B <- matrix(1:1000, nrow = 10)
+
+# Determinant and inverse for A
+detA <- det(A)
+invA <- tryCatch(solve(A), error = function(e) e)
+
+# Determinant and inverse for B
+detB <- tryCatch(det(B), error = function(e) e)
+invB <- tryCatch(solve(B), error = function(e) e)
+
+
+> detA
+[1] 0
+
+> invA
+Error in solve.default(A) : 
+  system is computationally singular: reciprocal condition number = 0
+
+> detB
+Error in det(B) : 'x' must be a square matrix
+
+> invB
+Error in solve.default(B) : 'a' (10 x 100) must be square
