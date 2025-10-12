@@ -1,0 +1,82 @@
+data("mtcars")
+df <- mtcars
+head(df)
+str(df)
+
+print(df[1:5, 1:4])
+summary(df)
+plot(mpg ~ wt, data = df, main = "Fuel efficiency vs. weight",
+     xlab = "Weight (1000 lbs)", ylab = "Miles per gallon")
+
+x <- list(a = 1, b = 2)
+summary(x)
+
+s3_obj <- list(name = "Myself", age = 29, GPA = 3.5)
+class(s3_obj) <- "student_s3"
+
+print.student_s3 <- function(x, ...) {
+  cat(sprintf("S3 Student: %s | Age: %d | GPA: %.1f\n", x$name, x$age, x$GPA))
+  invisible(x)
+}
+
+summary.student_s3 <- function(object, ...) {
+  out <- list(
+    name = object$name,
+    age = object$age,
+    GPA = object$GPA,
+    status = if (object$GPA >= 3.0) "Good standing" else "Needs improvement"
+  )
+  class(out) <- "summary.student_s3"
+  out
+}
+
+print.summary.student_s3 <- function(x, ...) {
+  cat("Summary (student_s3)\n",
+      " Name:  ", x$name, "\n",
+      " Age:   ", x$age, "\n",
+      " GPA:   ", x$GPA, "\n",
+      " Status:", x$status, "\n", sep = "")
+  invisible(x)
+}
+
+print(s3_obj)
+summary(s3_obj)
+
+setClass("student_s4",
+         slots = c(name = "character", age = "numeric", GPA = "numeric"))
+
+s4_obj <- new("student_s4", name = "Myself", age = 29, GPA = 3.5)
+
+setMethod("show", "student_s4", function(object) {
+  cat(sprintf("S4 Student: %s | Age: %d | GPA: %.1f\n",
+              object@name, as.integer(object@age), object@GPA))
+})
+
+if (!isGeneric("summary")) {
+  setGeneric("summary", function(object, ...) standardGeneric("summary"))
+}
+
+setMethod("summary", signature(object = "student_s4"),
+          function(object, ...) {
+            status <- if (object@GPA >= 3.0) "Good standing" else "Needs improvement"
+            list(name = object@name, age = object@age, GPA = object@GPA, status = status)
+          })
+
+s4_obj
+summary(s4_obj)
+
+isS4(df)
+isS4(s4_obj)
+class(df)
+methods(class = "data.frame")
+methods("summary")
+getS3method("summary", "data.frame")
+isClass("student_s4")
+getClass("student_s4")
+showMethods("summary")
+selectMethod("summary", "student_s4")
+
+typeof(df)
+mode(df)
+storage.mode(df)
+str(df)
