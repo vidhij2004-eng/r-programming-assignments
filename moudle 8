@@ -1,0 +1,49 @@
+if (!dir.exists("results")) dir.create("results")
+
+txt <- 'Name,Age,Sex,Grade
+Raul,25,Male,80
+Booker,18,Male,83
+Lauri,21,Female,90
+Leonie,21,Female,91
+Sherlyn,22,Female,85
+Mikaela,20,Female,69
+Raphael,23,Male,91
+Aiko,24,Female,97
+Tiffaney,21,Female,78
+Corina,23,Female,81
+Petronila,23,Female,98
+Alecia,20,Female,87
+Shemika,23,Female,97
+Fallon,22,Female,90
+Deloris,21,Female,67
+Randee,23,Female,91
+Eboni,20,Female,84
+Delfina,19,Female,93
+Ernestina,19,Female,93
+Milo,19,Male,67'
+student6 <- read.csv(textConnection(txt), stringsAsFactors = FALSE)
+
+if (!requireNamespace("plyr", quietly = TRUE)) install.packages("plyr")
+library(plyr)
+
+gender_mean <- ddply(student6, "Sex", summarise, GradeAverage = mean(Grade, na.rm = TRUE))
+write.table(gender_mean, file = file.path("results", "gender_mean.txt"), sep = "\t", row.names = FALSE)
+
+i_students <- subset(student6, grepl("i", Name, ignore.case = TRUE))
+write.csv(i_students$Name, file = file.path("results", "i_students.csv"), row.names = FALSE, quote = FALSE)
+write.csv(i_students, file = file.path("results", "i_students_full.csv"), row.names = FALSE)
+
+out_files <- c(
+  file.path("results", "gender_mean.txt"),
+  file.path("results", "i_students.csv"),
+  file.path("results", "i_students_full.csv")
+)
+exists_tbl <- data.frame(file = out_files, exists = file.exists(out_files))
+print(exists_tbl, row.names = FALSE)
+
+cat("\n--- gender_mean.txt ---\n")
+print(readLines(file.path("results", "gender_mean.txt"), n = 5))
+cat("\n--- i_students.csv ---\n")
+print(head(read.csv(file.path("results", "i_students.csv"))))
+cat("\n--- i_students_full.csv ---\n")
+print(head(read.csv(file.path("results", "i_students_full.csv"))))
