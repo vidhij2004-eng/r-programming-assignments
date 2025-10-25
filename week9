@@ -1,0 +1,46 @@
+data("mtcars")
+
+plot(mtcars$hp, mtcars$mpg,
+     main = "Base R: Horsepower vs. MPG",
+     xlab = "Horsepower (hp)",
+     ylab = "Miles per Gallon (mpg)",
+     pch = 19, col = "steelblue")
+
+hist(mtcars$mpg,
+     main = "Base R: Distribution of MPG",
+     xlab = "Miles per Gallon (mpg)",
+     col = "lightgreen", border = "white")
+
+library(lattice)
+xyplot(mpg ~ hp | factor(cyl),
+       data = mtcars,
+       main = "Lattice: MPG vs Horsepower by Cylinders",
+       xlab = "Horsepower (hp)",
+       ylab = "Miles per Gallon (mpg)",
+       pch = 19, col = "darkorange")
+
+bwplot(mpg ~ factor(gear),
+       data = mtcars,
+       main = "Lattice: MPG by Gear Count",
+       xlab = "Gears",
+       ylab = "Miles per Gallon (mpg)",
+       col = "lightblue")
+
+library(ggplot2)
+ggplot(mtcars, aes(x = hp, y = mpg, color = factor(cyl))) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "ggplot2: MPG vs Horsepower by Cylinders",
+       x = "Horsepower (hp)",
+       y = "Miles per Gallon (mpg)",
+       color = "Cylinders") +
+  theme_minimal()
+
+ggplot(mtcars, aes(x = mpg, fill = factor(gear))) +
+  geom_histogram(binwidth = 3, color = "white") +
+  facet_wrap(~ gear) +
+  labs(title = "ggplot2: MPG Distribution by Gear Count",
+       x = "Miles per Gallon (mpg)",
+       y = "Frequency",
+       fill = "Gears") +
+  theme_minimal()
